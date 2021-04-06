@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "525371663874-vi4nggchgt8928inv9frc1uhjolddthf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.taxis_app",
+            "certificate_hash": "eda68368f1a702b548a88b7f6e487cf63ddc34fd"
+          }
+        },
+        {
           "client_id": "525371663874-rtikkasekr4lf8j6m5dgsvnju9adl9tp.apps.googleusercontent.com",
           "client_type": 3
         }

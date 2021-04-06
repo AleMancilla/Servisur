@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:taxis_app/Core/User_Preferens.dart';
 import 'package:taxis_app/Pages/HomePage.dart';
+import 'package:taxis_app/Pages/RegisterPage.dart';
 // ignore: must_be_immutable
 class SplashScreenPage extends StatefulWidget {
   @override
@@ -12,8 +13,6 @@ class SplashScreenPage extends StatefulWidget {
 
 class _SplashScreenPageState extends State<SplashScreenPage> {
   Widget one ;
-
-  UserPreferences prefs = UserPreferences();
 
   final FirebaseAuth auth = FirebaseAuth.instance;
 
@@ -26,7 +25,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
       one = HomePage();
     }else{
       print('NO HAY USUARIO');
-      one = HomePage();
+      one = RegisterPage();
       
     }
     

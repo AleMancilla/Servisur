@@ -1,7 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_animarker/lat_lng_interpolation.dart';
+import 'package:flutter_animarker/models/lat_lng_delta.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:taxis_app/Core/ApiUbication.dart';
 class MapSendLocation extends StatefulWidget {
   @override
@@ -14,62 +17,91 @@ class _MapSendLocationState extends State<MapSendLocation> {
   ApiUbication apiUbication = ApiUbication();
 
 
-  StreamController streamController;
+  // StreamController streamController;
 
-  void onPauseHandler() {
-    print('on Pause');
-  }
+  // void onPauseHandler() {
+  //   print('on Pause');
+  // }
+  // 
+  StreamSubscription<Position> positionStream;
 
   @override
   void initState() { 
     super.initState();
     getUbication();
-
-    // streamController = new StreamController(
-    //     onPause: onPauseHandler,
-    //   );
-  
-    //   StreamSubscription subscription;
-
-    StreamSubscription<Position> positionStream = Geolocator.getPositionStream(
+    cargarMarker();
+    positionStream = Geolocator.getPositionStream(
       desiredAccuracy: LocationAccuracy.best,
-      // distanceFilter: 2,
-      intervalDuration: Duration(seconds: 10),
-      timeInterval: 10
+      // distanceFilter: 1,
+      intervalDuration: Duration(seconds: 1),
+      // timeInterval: 1
     ).listen(
       (Position position) {
-          print(position == null ? 'Unknown' : position.latitude.toString() + ', ' + position.longitude.toString());
+          _markers = {};
+          print(position == null ? 'Unknown' : position.latitude.toString() + ', ' + position.longitude.toString() + ' __ '+position.floor.toString());
+          if(position != null){
+            _markers.add(
+            Marker(
+              markerId: MarkerId("MIMARCADOR"),
+              position: LatLng(position.latitude,position.longitude ),
+              icon: markerBitMap,
+              )
+            );
+            setState(() {
+              
+            });
+          }
       });
-    
-      // subscription = streamController.stream.listen((data) {
-      //   print("DataReceived: " + data);
- 
-      //   // Add 5 seconds delay
-      //   // It will call onPause function passed on StreamController constructor
-      //   subscription.pause(Future.delayed(const Duration(seconds: 5)));
-      // }, onDone: () {
-      //   print("Task Done");
-      // }, onError: (error) {
-      //   print("Some Error");
-      // });
+  }
+
+  @override
+  void dispose() { 
+    positionStream.cancel();
+    super.dispose();
+  }
+
+  BitmapDescriptor markerBitMap;
+  cargarMarker()async{
+     markerBitMap = await BitmapDescriptor.fromAssetImage(ImageConfiguration(devicePixelRatio: 2.5),'src/icons/markerTaxi.png');
   }
 
   getUbication()async{
-    position = await apiUbication.determinePosition();
-    print("===> $position");
-    // try {
-    //   setState(() {});  
-    // } catch (e) {
-    // }
+    try {
+      position = await apiUbication.determinePosition();
+      print("===> $position");
+      setState(() {});  
+    } catch (e) {
+    }
   }
 
+  CameraPosition positionMap = CameraPosition(
+    target: LatLng(-16.482557865279468, -68.1214064732194),
+    zoom: 16
+  );
+
+  Completer<GoogleMapController> _controller = Completer();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        color: Colors.red,
+    return SafeArea(
+      child: Scaffold(
+        body: Container(
+          color: Colors.red,
+          child: GoogleMap(
+            mapType: MapType.normal,
+            initialCameraPosition: positionMap,
+            markers: _markers,
+            onMapCreated: (controller) {
+              _controller.complete(controller);
+            },
+          ),
+        ),
       ),
     );
   }
+
+  //////////////////////////////////////////////
+  ///
+  Set<Marker> _markers = {};
+  
 }

@@ -35,7 +35,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
   Widget build(BuildContext context) {
     return CustomSplash(
         imagePath: 'src/images/iconTaxi.png',
-        backGroundColor: Colors.deepOrange,
+        // backGroundColor: Colors.deepOrange,
         animationEffect: 'zoom-in',
         logoSize: 200,
         home: one,

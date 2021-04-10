@@ -1,7 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:taxis_app/Core/User_Preferens.dart';
-import 'package:taxis_app/Pages/HomePage.dart';
 import 'package:taxis_app/Pages/SplashScreen.dart';
  
 void main(){

@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "525371663874",
+    "firebase_url": "https://taxiapp-810d8-default-rtdb.firebaseio.com",
     "project_id": "taxiapp-810d8",
     "storage_bucket": "taxiapp-810d8.appspot.com"
   },
@@ -18,6 +19,43 @@
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.taxis_app",
+            "certificate_hash": "eda68368f1a702b548a88b7f6e487cf63ddc34fd"
+          }
+        },
+        {
+          "client_id": "525371663874-rtikkasekr4lf8j6m5dgsvnju9adl9tp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWV3OuFr4LRHZDUxo-OdwnQdGuqzZOZ3w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "525371663874-rtikkasekr4lf8j6m5dgsvnju9adl9tp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:525371663874:android:04fff2ec998f02d75e691b",
+        "android_client_info": {
+          "package_name": "com.example.taxis_app_admin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "525371663874-sh5kjopq980ibdq0jqufiaubflsmv1e8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.taxis_app_admin",
             "certificate_hash": "eda68368f1a702b548a88b7f6e487cf63ddc34fd"
           }
         },

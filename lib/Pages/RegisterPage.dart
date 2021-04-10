@@ -4,12 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:taxis_app/Core/ApiFirebase.dart';
 import 'package:taxis_app/Core/User_Preferens.dart';
 import 'package:taxis_app/Pages/HomePage.dart';
+import 'package:taxis_app/Widgets/SimpleInputWidget.dart';
 
 class RegisterPage extends StatelessWidget {
 
   final ApiFirebase apiFirebase = ApiFirebase();
   final UserPreferences pref = UserPreferences();
-
+  TextEditingController controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,11 +23,14 @@ class RegisterPage extends StatelessWidget {
               width: 100,
               height: 100,
             ),
+            Container(
+              padding: EdgeInsets.all(20),
+              child: SimpleInputWidget(
+                label: "Matricula vehicular",
+                textEditingController: controller,
+              )
+            ),
             _buttonLoginGoogle(context)
-            // Container(
-            //   padding: EdgeInsets.all(20),
-            //   child: SimpleInputWidget()
-            // )
           ],
         ),
       ),
@@ -38,27 +42,40 @@ class RegisterPage extends StatelessWidget {
             padding: const EdgeInsets.all(30.0),
             child: CupertinoButton(
               onPressed: ()async{
-                Flushbar(
-                  title:  "Cargando",
-                  message:  "Espere un momento mientras procesamos el pedido",
-                  duration:  Duration(seconds: 3),
-                  backgroundColor: Colors.green,
-                )..show(context);
-                var user =  await apiFirebase.signInWithGoogle();
-                if(user  != null){
-                  pref.userEmail = user.email;
-                  pref.userName = user.displayName;
-                  pref.userPhotoUrl = user.photoURL;
-                  Navigator.push(
-                    context, 
-                    MaterialPageRoute(builder: (BuildContext context) => HomePage())
-                  );
+                print("== ${controller.text} == ${controller.text != ''} == ${controller.text != null}");
+                if(controller.text != null && controller.text != ''){
+
+                  Flushbar(
+                    title:  "Cargando",
+                    message:  "Espere un momento mientras procesamos la solicitud",
+                    duration:  Duration(seconds: 3),
+                    backgroundColor: Colors.green,
+                  )..show(context);
+                  var user =  await apiFirebase.signInWithGoogle();
+                  if(user  != null){
+                    pref.userEmail = user.email;
+                    pref.userName = user.displayName;
+                    pref.userPhotoUrl = user.photoURL;
+                    pref.userFirebaseId = user.uid;
+                    pref.userMatricula = controller.text;
+                    Navigator.push(
+                      context, 
+                      MaterialPageRoute(builder: (BuildContext context) => HomePage())
+                    );
+                  }else{
+                    Flushbar(
+                      title:  "Error",
+                      message:  "Ocurrio un error al procesar tu solicitud",
+                      duration:  Duration(seconds: 3),
+                      backgroundColor: Colors.red,
+                    )..show(context);
+                  }
                 }else{
                   Flushbar(
                     title:  "Error",
-                    message:  "Ocurrio un error al procesar tu solicitud",
+                    message:  "Matricula requerida",
                     duration:  Duration(seconds: 3),
-                    backgroundColor: Colors.red,
+                    backgroundColor: Colors.green,
                   )..show(context);
                 }
               }, 

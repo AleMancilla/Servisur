@@ -1,25 +1,25 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:taxis_app/Core/ApiUbication.dart';
+import 'package:taxis_app/Core/User_Preferens.dart';
 class MapSendLocation extends StatefulWidget {
-  final FirebaseApp app;
 
-  const MapSendLocation({Key key, this.app}) : super(key: key);
   @override
   _MapSendLocationState createState() => _MapSendLocationState();
 }
 
 class _MapSendLocationState extends State<MapSendLocation> {
-
+  UserPreferences prefs = UserPreferences();
   Position position;
   ApiUbication apiUbication = ApiUbication();
 
+  CollectionReference taxis = FirebaseFirestore.instance.collection('taxis');
 
   // StreamController streamController;
 
@@ -72,9 +72,33 @@ class _MapSendLocationState extends State<MapSendLocation> {
                 // mapController.animateCamera(CameraUpdate.newCameraPosition(
                 // CameraPosition(target: LatLng(position.latitude,position.longitude ), zoom: 16),
                 // )); 
+                taxis
+                .doc("${prefs.userMatricula}")
+                .set({
+                  'matricula':prefs.userMatricula,
+                  'idFirebase':prefs.userFirebaseId,
+                  'userEmail':prefs.userEmail,
+                  'userPhoto':prefs.userPhotoUrl,
+                  'userName':prefs.userName,
+                  'latitude':position.latitude.toString(),
+                  'longitude':position.longitude.toString(),
+                  'floor':position.floor.toString(),
+                  'accuracy':position.accuracy.toString(),
+                  'altitude':position.altitude.toString(),
+                  'heading':position.heading.toString(),
+                  'isMocked':position.isMocked .toString(),
+                  'speed':position.speed.toString(),
+                  'speedAccuracy':position.speedAccuracy.toString(),
+                  'timestamp':position.timestamp.toString(),
+                })
+                .then((value) => print("taxi Updated"))
+                .catchError((error) => print("Failed to update taxi: $error"));
               } catch (e) {
+                print("############ $e #############");
               }
             });
+
+
           }
       });
 
@@ -149,17 +173,17 @@ class _MapSendLocationState extends State<MapSendLocation> {
                   },
                 ),
               ),
-              Text("  == Datos transferidos           = $i ="),
-              if(position?.latitude!=null)Text("  == latitude                = ${position.latitude} ="),
-              if(position?.longitude!=null)Text("  == longitude              = ${position.longitude} ="),
-              if(position?.floor!=null)Text("  == floor                      = ${position.floor} ="),
-              if(position?.accuracy!=null)Text("  == accuracy                = ${position.accuracy} ="),
-              if(position?.altitude!=null)Text("  == altitude                   = ${position.altitude} ="),
-              if(position?.heading!=null)Text("  == heading                   = ${position.heading} ="),
-              if(position?.isMocked!=null)Text("  == isMocked                = ${position.isMocked} ="),
-              if(position?.speed!=null)Text("  == speed                      = ${position.speed} "),
-              if(position?.speedAccuracy!=null)Text("  == speedAccuracy      = ${position.speedAccuracy} ="),
-              if(position?.timestamp!=null)Text("  == timestamp              = ${position.timestamp} ="),
+              // Text("  == Datos transferidos           = $i ="),
+              if(position?.latitude!=null)Text("  == Latitude                = ${position.latitude} ="),
+              if(position?.longitude!=null)Text("  == Longitude              = ${position.longitude} ="),
+              // if(position?.floor!=null)Text("  == floor                      = ${position.floor} ="),
+              // if(position?.accuracy!=null)Text("  == accuracy                = ${position.accuracy} ="),
+              if(position?.altitude!=null)Text("  == Altitude                   = ${position.altitude} ="),
+              // if(position?.heading!=null)Text("  == heading                   = ${position.heading} ="),
+              // if(position?.isMocked!=null)Text("  == isMocked                = ${position.isMocked} ="),
+              if(position?.speed!=null)Text("  == Velocidad               = ${position.speed} "),
+              if(position?.speedAccuracy!=null)Text("  == Aceleracion            = ${position.speedAccuracy} ="),
+              // if(position?.timestamp!=null)Text("  == timestamp              = ${position.timestamp} ="),
 
             ],
           ),

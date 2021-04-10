@@ -34,5 +34,8 @@ class UserPreferences {
   String get userPhotoUrl => _prefs.getString('userPhotoUrl');
   set userPhotoUrl(String mId) => _prefs.setString('userPhotoUrl', mId);
 
+  String get userMatricula => _prefs.getString('userMatricula');
+  set userMatricula(String mId) => _prefs.setString('userMatricula', mId);
+
 
 }

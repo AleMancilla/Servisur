@@ -2,7 +2,6 @@
 import 'package:custom_splash/custom_splash.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:taxis_app/Core/User_Preferens.dart';
 import 'package:taxis_app/Pages/HomePage.dart';
 import 'package:taxis_app/Pages/RegisterPage.dart';
 // ignore: must_be_immutable

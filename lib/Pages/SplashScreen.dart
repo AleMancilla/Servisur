@@ -33,7 +33,7 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
   @override
   Widget build(BuildContext context) {
     return CustomSplash(
-        imagePath: 'src/images/iconTaxi.png',
+        imagePath: 'src/icons/iconoApp.png',
         // backGroundColor: Colors.deepOrange,
         animationEffect: 'zoom-in',
         logoSize: 200,

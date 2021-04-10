@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
         // Una vez completado, muestre su solicitud
         if (snapshot.connectionState == ConnectionState.done) {
           return MaterialApp(
-            title: 'Material App',
+            title: 'ServiSur',
             home: SplashScreenPage(),
           );
         }

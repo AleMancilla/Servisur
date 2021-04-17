@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:location/location.dart';
 import 'package:taxis_app/Core/ApiUbication.dart';
 import 'package:taxis_app/Core/User_Preferens.dart';
 import 'package:taxis_app/Pages/MapSendLocation.dart';
@@ -11,7 +11,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Position position;
+  LocationData position;
   ApiUbication apiUbication = ApiUbication();
   final UserPreferences prefs = UserPreferences();
 

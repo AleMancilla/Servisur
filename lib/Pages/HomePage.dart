@@ -44,6 +44,10 @@ class _HomePageState extends State<HomePage> {
             Text(prefs.userName,
               style: TextStyle(fontSize: 18,color: Colors.blueGrey,fontWeight: FontWeight.w500),
             ),
+            SizedBox(height: 15,),
+            Text(prefs.userMatricula,
+              style: TextStyle(fontSize: 18,color: Colors.blueGrey,fontWeight: FontWeight.w500),
+            ),
             SizedBox(height: 25,),
             Divider(),
             CupertinoButton(

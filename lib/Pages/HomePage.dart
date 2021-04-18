@@ -1,5 +1,9 @@
+import 'package:background_geolocation_plugin/background_geolocation_plugin.dart';
+import 'package:background_geolocation_plugin/location_item.dart';
+import 'package:background_geolocation_plugin/measure_state.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:location/location.dart';
 import 'package:taxis_app/Core/ApiUbication.dart';
 import 'package:taxis_app/Core/User_Preferens.dart';
@@ -17,6 +21,54 @@ class _HomePageState extends State<HomePage> {
 
   getUbication()async{
       position = await apiUbication.determinePosition();
+      
+  }
+
+  String _platformVersion = 'Unknown';
+  String resultMsg = 'Unknown';
+  List<LocationItem> allLocations = [];
+  MeasureState currentState;
+
+  void execMethod(methodName) async {
+    var res = "";
+    try {
+      if (methodName == "startLocationTracking") {
+        res = await BackgroundGeolocationPlugin.startLocationTracking();
+      } else if (methodName == "stopLocationTracking") {
+        res = await BackgroundGeolocationPlugin.stopLocationTracking();
+      } else if (methodName == "pauseLocationTracking") {
+        res = await BackgroundGeolocationPlugin.pauseLocationTracking();
+      } else if (methodName == "continueLocationTracking") {
+        res = await BackgroundGeolocationPlugin.continueLocationTracking();
+      } else if (methodName == "getState") {
+        currentState = await BackgroundGeolocationPlugin.getState();
+        res = currentState.toString();
+      } else if (methodName == "requestPermissions") {
+        res = await BackgroundGeolocationPlugin.requestPermissions();
+      } else if (methodName == "getAllLocations") {
+        List<LocationItem> items =
+            await BackgroundGeolocationPlugin.getAllLocations();
+        allLocations = items;
+        res = "all stored locations size " + items.length.toString();
+      } else if (methodName == "getNewLocations") {
+        var time = allLocations.last.time;
+        List<LocationItem> items = await BackgroundGeolocationPlugin
+            .getAllStoredLocationsWithTimeBiggerThan(time);
+        allLocations.addAll(items);
+        res = "Got " + items.length.toString() + " new locations";
+      }
+    } on PlatformException catch (e) {
+      res = "Error, code: " +
+          e.code +
+          ", message: " +
+          e.message +
+          ", details: " +
+          e.details;
+    }
+
+    setState(() {
+      resultMsg = "Result for: " + methodName + ": " + res;
+    });
   }
 
   @override
@@ -61,6 +113,57 @@ class _HomePageState extends State<HomePage> {
                 );
               }
             ),
+
+            ////////////////////////////////
+            Text(resultMsg),
+                RaisedButton(
+                  onPressed: () {
+                    execMethod("startLocationTracking");
+                  },
+                  child: Text("startLocationTracking"),
+                ),
+                RaisedButton(
+                  onPressed: () {
+                    execMethod("stopLocationTracking");
+                  },
+                  child: Text("stopLocationTracking"),
+                ),
+                RaisedButton(
+                  onPressed: () {
+                    execMethod("pauseLocationTracking");
+                  },
+                  child: Text("pauseLocationTracking"),
+                ),
+                RaisedButton(
+                  onPressed: () {
+                    execMethod("continueLocationTracking");
+                  },
+                  child: Text("continueLocationTracking"),
+                ),
+                RaisedButton(
+                  onPressed: () {
+                    execMethod("getState");
+                  },
+                  child: Text("getState"),
+                ),
+                RaisedButton(
+                  onPressed: () {
+                    execMethod("requestPermissions");
+                  },
+                  child: Text("requestPermissions"),
+                ),
+                RaisedButton(
+                  onPressed: () {
+                    execMethod("getAllLocations");
+                  },
+                  child: Text("getAllLocations"),
+                ),
+                RaisedButton(
+                  onPressed: () {
+                    execMethod("getNewLocations");
+                  },
+                  child: Text("getNewLocations"),
+                ),
           ],
         ),
       ),

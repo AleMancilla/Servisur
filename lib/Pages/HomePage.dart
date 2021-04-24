@@ -65,7 +65,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    activarSegundoPlano();
+    // activarSegundoPlano();
     super.initState();
   }
 
@@ -125,13 +125,14 @@ class _HomePageState extends State<HomePage> {
             CupertinoButton(
                 child: Text("EMPEZAR JORNADA"),
                 color: Colors.green,
-                onPressed: () {
+                onPressed: () async {
                   // MapSendLocation
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (BuildContext context) =>
                               MapSendLocation()));
+                  activarSegundoPlano();
                 }),
 
             // ////////////////////////////////

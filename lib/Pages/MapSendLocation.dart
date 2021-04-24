@@ -1,6 +1,9 @@
 import 'dart:async';
 
+import 'package:another_flushbar/flushbar.dart';
+import 'package:background_geolocation_plugin/background_geolocation_plugin.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -65,43 +68,7 @@ class _MapSendLocationState extends State<MapSendLocation> {
           // position.timestamp.toString()
           );
       if (position != null) {
-        setState(() {
-          _markers.add(Marker(
-            markerId: MarkerId("MIMARCADOR"),
-            position: LatLng(position.latitude, position.longitude),
-            icon: markerBitMap,
-            rotation: position.heading,
-            anchor: Offset(0.5, 0.5),
-          ));
-          try {
-            // mapController.animateCamera(CameraUpdate.newCameraPosition(
-            // CameraPosition(target: LatLng(position.latitude,position.longitude ), zoom: 16),
-            // ));
-            taxis
-                .doc("${prefs.userMatricula}")
-                .set({
-                  'matricula': prefs.userMatricula,
-                  'idFirebase': prefs.userFirebaseId,
-                  'userEmail': prefs.userEmail,
-                  'userPhoto': prefs.userPhotoUrl,
-                  'userName': prefs.userName,
-                  'latitude': position.latitude.toString(),
-                  'longitude': position.longitude.toString(),
-                  // 'floor':position.floor.toString(),
-                  'accuracy': position.accuracy.toString(),
-                  'altitude': position.altitude.toString(),
-                  'heading': position.heading.toString(),
-                  // 'isMocked':position.isMocked .toString(),
-                  'speed': position.speed.toString(),
-                  'speedAccuracy': position.speedAccuracy.toString(),
-                  'time': position.time.toString(),
-                })
-                .then((value) => print("taxi Updated"))
-                .catchError((error) => print("Failed to update taxi: $error"));
-          } catch (e) {
-            print("############ $e #############");
-          }
-        });
+        cambiarMarker();
       }
     });
 
@@ -171,12 +138,57 @@ class _MapSendLocationState extends State<MapSendLocation> {
     //   });
   }
 
+  cambiarMarker({String status = 'LIBRE'}) {
+    try {
+      setState(() {
+        _markers.add(Marker(
+          markerId: MarkerId("MIMARCADOR"),
+          position: LatLng(position.latitude, position.longitude),
+          icon: markerBitMap,
+          rotation: position.heading,
+          anchor: Offset(0.5, 0.5),
+        ));
+      });
+    } catch (e) {
+      print('___ $e');
+    }
+    try {
+      // mapController.animateCamera(CameraUpdate.newCameraPosition(
+      // CameraPosition(target: LatLng(position.latitude,position.longitude ), zoom: 16),
+      // ));
+      taxis
+          .doc("${prefs.userMatricula}")
+          .set({
+            'matricula': prefs.userMatricula,
+            'idFirebase': prefs.userFirebaseId,
+            'userEmail': prefs.userEmail,
+            'userPhoto': prefs.userPhotoUrl,
+            'userName': prefs.userName,
+            'latitude': position.latitude.toString(),
+            'longitude': position.longitude.toString(),
+            // 'floor':position.floor.toString(),
+            'accuracy': position.accuracy.toString(),
+            'altitude': position.altitude.toString(),
+            'heading': position.heading.toString(),
+            // 'isMocked':position.isMocked .toString(),
+            'speed': position.speed.toString(),
+            'speedAccuracy': position.speedAccuracy.toString(),
+            'time': position.time.toString(),
+            'status': status
+          })
+          .then((value) => print("taxi Updated"))
+          .catchError((error) => print("Failed to update taxi: $error"));
+    } catch (e) {
+      print("############ $e #############");
+    }
+  }
+
   // Declarado fuera del metodo Build
   GoogleMapController mapController;
 
   @override
   void dispose() {
-    positionStream.cancel();
+    // positionStream.cancel();
     super.dispose();
   }
 
@@ -184,7 +196,7 @@ class _MapSendLocationState extends State<MapSendLocation> {
   cargarMarker() async {
     markerBitMap = await BitmapDescriptor.fromAssetImage(
       ImageConfiguration(devicePixelRatio: 2.5),
-      'src/icons/carTop.png',
+      'src/icons/carTopGreen.png',
     );
   }
 
@@ -215,8 +227,11 @@ class _MapSendLocationState extends State<MapSendLocation> {
           color: Colors.grey[50],
           child: Stack(
             // crossAxisAlignment: CrossAxisAlignment.start,
+            alignment: Alignment.center,
             children: [
-              Expanded(
+              SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
                 child: GoogleMap(
                   mapType: MapType.normal,
                   initialCameraPosition: positionMap,
@@ -242,10 +257,112 @@ class _MapSendLocationState extends State<MapSendLocation> {
                   bottom: 0,
                   child: Container(
                     // margin: EdgeInsets.symmetric(horizontal: 20),
-                    color: Colors.red,
-                    width: double.infinity,
-                    height: 200,
-                  ))
+                    color: Colors.transparent,
+                    width: MediaQuery.of(context).size.width - 100,
+                    // width: double.infinity,
+                    height: 130,
+                    child: Wrap(
+                      alignment: WrapAlignment.center,
+                      children: [
+                        Container(
+                          width: 100,
+                          padding: const EdgeInsets.all(8.0),
+                          child: CupertinoButton(
+                            child: Text('LIBRE'),
+                            padding: EdgeInsets.symmetric(vertical: 5),
+                            onPressed: () async {
+                              markerBitMap =
+                                  await BitmapDescriptor.fromAssetImage(
+                                ImageConfiguration(devicePixelRatio: 2.5),
+                                'src/icons/carTopGreen.png',
+                              );
+                              cambiarMarker(status: 'LIBRE');
+
+                              Flushbar(
+                                title: "LIBRE",
+                                message: "A la espera de nuevas solicitudes",
+                                duration: Duration(seconds: 3),
+                                backgroundColor: Colors.green,
+                              )..show(context);
+                            },
+                            color: Colors.green,
+                          ),
+                        ),
+                        Container(
+                          width: 120,
+                          padding: const EdgeInsets.all(8.0),
+                          child: CupertinoButton(
+                            padding: EdgeInsets.symmetric(vertical: 5),
+                            child: Text('ABORDO'),
+                            onPressed: () async {
+                              markerBitMap =
+                                  await BitmapDescriptor.fromAssetImage(
+                                ImageConfiguration(devicePixelRatio: 2.5),
+                                'src/icons/carTopRed.png',
+                              );
+                              cambiarMarker(status: 'ABORDO');
+
+                              Flushbar(
+                                title: "ABORDO",
+                                message: "Recogiste al pasajero.",
+                                duration: Duration(seconds: 3),
+                                backgroundColor: Colors.green,
+                              )..show(context);
+                            },
+                            color: Colors.red,
+                          ),
+                        ),
+                        Container(
+                          width: 150,
+                          padding: const EdgeInsets.all(8.0),
+                          child: CupertinoButton(
+                            padding: EdgeInsets.symmetric(vertical: 5),
+                            child: Text(
+                              'EN CAMINO',
+                              style: TextStyle(color: Colors.black),
+                            ),
+                            onPressed: () async {
+                              markerBitMap =
+                                  await BitmapDescriptor.fromAssetImage(
+                                ImageConfiguration(devicePixelRatio: 2.5),
+                                'src/icons/carTopYellow.png',
+                              );
+                              cambiarMarker(status: 'EN CAMINO');
+                              Flushbar(
+                                title: "EN CAMINO",
+                                message: "Vamos en camino.",
+                                duration: Duration(seconds: 3),
+                                backgroundColor: Colors.green,
+                              )..show(context);
+                            },
+                            color: Colors.yellow,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )),
+              Positioned(
+                top: 0.0,
+                child: Container(
+                  width: 200,
+                  child: CupertinoButton(
+                      padding: EdgeInsets.symmetric(vertical: 5),
+                      child: Text("FINALIZAR JORNADA"),
+                      color: Colors.green.withOpacity(0.8),
+                      onPressed: () async {
+                        // MapSendLocation
+                        Navigator.pop(context);
+                        await BackgroundGeolocationPlugin
+                            .stopLocationTracking();
+                        Flushbar(
+                          title: "Dia concluido",
+                          message: "Tu ubicacion dejara de ser compartida.",
+                          duration: Duration(seconds: 3),
+                          backgroundColor: Colors.green,
+                        )..show(context);
+                      }),
+                ),
+              )
               // Text("  == Datos transferidos           = $i ="),
               // if(position?.latitude!=null)Text("  == Latitude                = ${position.latitude} ="),
               // if(position?.longitude!=null)Text("  == Longitude              = ${position.longitude} ="),

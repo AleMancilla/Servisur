@@ -4,8 +4,6 @@ import 'package:background_geolocation_plugin/measure_state.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:location/location.dart';
-import 'package:taxis_app/Core/ApiUbication.dart';
 import 'package:taxis_app/Core/User_Preferens.dart';
 import 'package:taxis_app/Pages/MapSendLocation.dart';
 
@@ -15,14 +13,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  LocationData position;
-  ApiUbication apiUbication = ApiUbication();
   final UserPreferences prefs = UserPreferences();
-
-  getUbication()async{
-      position = await apiUbication.determinePosition();
-      
-  }
 
   String _platformVersion = 'Unknown';
   String resultMsg = 'Unknown';
@@ -42,7 +33,8 @@ class _HomePageState extends State<HomePage> {
         res = await BackgroundGeolocationPlugin.continueLocationTracking();
       } else if (methodName == "getState") {
         currentState = await BackgroundGeolocationPlugin.getState();
-        res = currentState.toString();
+        res =
+            '${currentState.isBinded}__${currentState.isRunning}__${currentState.metadata}';
       } else if (methodName == "requestPermissions") {
         res = await BackgroundGeolocationPlugin.requestPermissions();
       } else if (methodName == "getAllLocations") {
@@ -73,9 +65,23 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    getUbication();
+    activarSegundoPlano();
     super.initState();
   }
+
+  activarSegundoPlano() async {
+    try {
+      currentState = await BackgroundGeolocationPlugin.getState();
+      bool state = currentState.isBinded;
+      if (state) {
+        await BackgroundGeolocationPlugin.stopLocationTracking();
+      }
+      await BackgroundGeolocationPlugin.startLocationTracking();
+    } catch (e) {
+      print('__ERROR __ $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -92,78 +98,92 @@ class _HomePageState extends State<HomePage> {
                 fit: BoxFit.cover,
               ),
             ),
-            SizedBox(height: 15,),
-            Text(prefs.userName,
-              style: TextStyle(fontSize: 18,color: Colors.blueGrey,fontWeight: FontWeight.w500),
+            SizedBox(
+              height: 15,
             ),
-            SizedBox(height: 15,),
-            Text(prefs.userMatricula,
-              style: TextStyle(fontSize: 18,color: Colors.blueGrey,fontWeight: FontWeight.w500),
+            Text(
+              'Conductor: ${prefs.userName}',
+              style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.blueGrey,
+                  fontWeight: FontWeight.w500),
             ),
-            SizedBox(height: 25,),
+            SizedBox(
+              height: 15,
+            ),
+            Text(
+              'Matricula: ${prefs.userMatricula}',
+              style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.blueGrey,
+                  fontWeight: FontWeight.w500),
+            ),
+            SizedBox(
+              height: 25,
+            ),
             Divider(),
             CupertinoButton(
-              child: Text("Reportar Ubicacion"),
-              color: Colors.green, 
-              onPressed: (){
-                // MapSendLocation
-                Navigator.push(
-                  context, 
-                  MaterialPageRoute(builder: (BuildContext context) => MapSendLocation())
-                );
-              }
-            ),
+                child: Text("EMPEZAR JORNADA"),
+                color: Colors.green,
+                onPressed: () {
+                  // MapSendLocation
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              MapSendLocation()));
+                }),
 
-            ////////////////////////////////
-            Text(resultMsg),
-                RaisedButton(
-                  onPressed: () {
-                    execMethod("startLocationTracking");
-                  },
-                  child: Text("startLocationTracking"),
-                ),
-                RaisedButton(
-                  onPressed: () {
-                    execMethod("stopLocationTracking");
-                  },
-                  child: Text("stopLocationTracking"),
-                ),
-                RaisedButton(
-                  onPressed: () {
-                    execMethod("pauseLocationTracking");
-                  },
-                  child: Text("pauseLocationTracking"),
-                ),
-                RaisedButton(
-                  onPressed: () {
-                    execMethod("continueLocationTracking");
-                  },
-                  child: Text("continueLocationTracking"),
-                ),
-                RaisedButton(
-                  onPressed: () {
-                    execMethod("getState");
-                  },
-                  child: Text("getState"),
-                ),
-                RaisedButton(
-                  onPressed: () {
-                    execMethod("requestPermissions");
-                  },
-                  child: Text("requestPermissions"),
-                ),
-                RaisedButton(
-                  onPressed: () {
-                    execMethod("getAllLocations");
-                  },
-                  child: Text("getAllLocations"),
-                ),
-                RaisedButton(
-                  onPressed: () {
-                    execMethod("getNewLocations");
-                  },
-                  child: Text("getNewLocations"),
-                ),
+            // ////////////////////////////////
+            // Text(resultMsg),
+            // RaisedButton(
+            //   onPressed: () {
+            //     execMethod("startLocationTracking");
+            //   },
+            //   child: Text("startLocationTracking"),
+            // ),
+            // RaisedButton(
+            //   onPressed: () {
+            //     execMethod("stopLocationTracking");
+            //   },
+            //   child: Text("stopLocationTracking"),
+            // ),
+            // RaisedButton(
+            //   onPressed: () {
+            //     execMethod("pauseLocationTracking");
+            //   },
+            //   child: Text("pauseLocationTracking"),
+            // ),
+            // RaisedButton(
+            //   onPressed: () {
+            //     execMethod("continueLocationTracking");
+            //   },
+            //   child: Text("continueLocationTracking"),
+            // ),
+            // RaisedButton(
+            //   onPressed: () {
+            //     execMethod("getState");
+            //   },
+            //   child: Text("getState"),
+            // ),
+            // RaisedButton(
+            //   onPressed: () {
+            //     execMethod("requestPermissions");
+            //   },
+            //   child: Text("requestPermissions"),
+            // ),
+            // RaisedButton(
+            //   onPressed: () {
+            //     execMethod("getAllLocations");
+            //   },
+            //   child: Text("getAllLocations"),
+            // ),
+            // RaisedButton(
+            //   onPressed: () {
+            //     execMethod("getNewLocations");
+            //   },
+            //   child: Text("getNewLocations"),
+            // ),
           ],
         ),
       ),

@@ -41,6 +41,7 @@ dependencies:
   firebase_database: "^6.0.0"
   cloud_firestore: "^0.16.0+1"
   background_geolocation_plugin: ^0.1.1
+  flutter_lifecycle_state: ^1.0.0
   # flutter_background_geolocation: ^2.0.2
   # background_location: ^0.4.2
   
@@ -51,7 +52,7 @@ dev_dependencies:
   flutter_launcher_icons: ^0.7.4
 
 flutter_icons:
-  image_path: 'src/icons/iconoApp.png'
+  image_path: 'src/icons/iconoApp.jpeg'
   android: true
   ios: true
 

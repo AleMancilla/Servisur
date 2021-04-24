@@ -7,8 +7,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:taxis_app/Core/ApiUbication.dart';
 import 'package:taxis_app/Core/User_Preferens.dart';
-class MapSendLocation extends StatefulWidget {
 
+class MapSendLocation extends StatefulWidget {
   @override
   _MapSendLocationState createState() => _MapSendLocationState();
 }
@@ -25,14 +25,14 @@ class _MapSendLocationState extends State<MapSendLocation> {
   // void onPauseHandler() {
   //   print('on Pause');
   // }
-  // 
+  //
   StreamSubscription<LocationData> positionStream;
   int i = 0;
 
   Location location = new Location();
-  
+
   @override
-  void initState() { 
+  void initState() {
     super.initState();
     getUbication();
     cargarMarker();
@@ -40,65 +40,69 @@ class _MapSendLocationState extends State<MapSendLocation> {
     positionStream = location.onLocationChanged.listen((LocationData position) {
       // Use current location
       _markers = {};
-          this.position = position;
-          i = i+1;
-          
-          print(position == null ? 'Unknown' : 
-            position.latitude.toString() + ', ' + 
-            position.longitude.toString() + ' __ ' +
-            // position.floor.toString()  + ' __ ' +
-            position.accuracy.toString()  + ' __ ' +
-            position.altitude.toString()  + ' __ ' +
-            position.heading.toString()  + ' __ ' +
-            // position.isMocked .toString()  + ' __ ' +
-            position.speed.toString()  + ' __ ' +
-            position.speedAccuracy.toString()  + ' __ ' +
-            position.time.toString()
-            // position.timestamp.toString()
+      this.position = position;
+      i = i + 1;
+
+      print(position == null
+              ? 'Unknown'
+              : position.latitude.toString() +
+                  ', ' +
+                  position.longitude.toString() +
+                  ' __ ' +
+                  // position.floor.toString()  + ' __ ' +
+                  position.accuracy.toString() +
+                  ' __ ' +
+                  position.altitude.toString() +
+                  ' __ ' +
+                  position.heading.toString() +
+                  ' __ ' +
+                  // position.isMocked .toString()  + ' __ ' +
+                  position.speed.toString() +
+                  ' __ ' +
+                  position.speedAccuracy.toString() +
+                  ' __ ' +
+                  position.time.toString()
+          // position.timestamp.toString()
           );
-          if(position != null){
-            setState(() {
-              _markers.add(
-              Marker(
-                markerId: MarkerId("MIMARCADOR"),
-                position: LatLng(position.latitude,position.longitude ),
-                icon: markerBitMap,
-                rotation: position.heading,
-                anchor: Offset(0.5, 0.5),
-                )
-              );
-              try {
-                // mapController.animateCamera(CameraUpdate.newCameraPosition(
-                // CameraPosition(target: LatLng(position.latitude,position.longitude ), zoom: 16),
-                // )); 
-                taxis
+      if (position != null) {
+        setState(() {
+          _markers.add(Marker(
+            markerId: MarkerId("MIMARCADOR"),
+            position: LatLng(position.latitude, position.longitude),
+            icon: markerBitMap,
+            rotation: position.heading,
+            anchor: Offset(0.5, 0.5),
+          ));
+          try {
+            // mapController.animateCamera(CameraUpdate.newCameraPosition(
+            // CameraPosition(target: LatLng(position.latitude,position.longitude ), zoom: 16),
+            // ));
+            taxis
                 .doc("${prefs.userMatricula}")
                 .set({
-                  'matricula':prefs.userMatricula,
-                  'idFirebase':prefs.userFirebaseId,
-                  'userEmail':prefs.userEmail,
-                  'userPhoto':prefs.userPhotoUrl,
-                  'userName':prefs.userName,
-                  'latitude':position.latitude.toString(),
-                  'longitude':position.longitude.toString(),
+                  'matricula': prefs.userMatricula,
+                  'idFirebase': prefs.userFirebaseId,
+                  'userEmail': prefs.userEmail,
+                  'userPhoto': prefs.userPhotoUrl,
+                  'userName': prefs.userName,
+                  'latitude': position.latitude.toString(),
+                  'longitude': position.longitude.toString(),
                   // 'floor':position.floor.toString(),
-                  'accuracy':position.accuracy.toString(),
-                  'altitude':position.altitude.toString(),
-                  'heading':position.heading.toString(),
+                  'accuracy': position.accuracy.toString(),
+                  'altitude': position.altitude.toString(),
+                  'heading': position.heading.toString(),
                   // 'isMocked':position.isMocked .toString(),
-                  'speed':position.speed.toString(),
-                  'speedAccuracy':position.speedAccuracy.toString(),
-                  'time':position.time.toString(),
+                  'speed': position.speed.toString(),
+                  'speedAccuracy': position.speedAccuracy.toString(),
+                  'time': position.time.toString(),
                 })
                 .then((value) => print("taxi Updated"))
                 .catchError((error) => print("Failed to update taxi: $error"));
-              } catch (e) {
-                print("############ $e #############");
-              }
-            });
-
-
+          } catch (e) {
+            print("############ $e #############");
           }
+        });
+      }
     });
 
     // positionStream = Geolocator.getPositionStream(
@@ -112,8 +116,8 @@ class _MapSendLocationState extends State<MapSendLocation> {
     //       _markers = {};
     //       this.position = position;
     //       i = i+1;
-    //       print(position == null ? 'Unknown' : 
-    //         position.latitude.toString() + ', ' + 
+    //       print(position == null ? 'Unknown' :
+    //         position.latitude.toString() + ', ' +
     //         position.longitude.toString() + ' __ ' +
     //         position.floor.toString()  + ' __ ' +
     //         position.accuracy.toString()  + ' __ ' +
@@ -136,7 +140,7 @@ class _MapSendLocationState extends State<MapSendLocation> {
     //           try {
     //             // mapController.animateCamera(CameraUpdate.newCameraPosition(
     //             // CameraPosition(target: LatLng(position.latitude,position.longitude ), zoom: 16),
-    //             // )); 
+    //             // ));
     //             taxis
     //             .doc("${prefs.userMatricula}")
     //             .set({
@@ -163,50 +167,43 @@ class _MapSendLocationState extends State<MapSendLocation> {
     //           }
     //         });
 
-
     //       }
     //   });
-
-
   }
 
   // Declarado fuera del metodo Build
   GoogleMapController mapController;
 
   @override
-  void dispose() { 
+  void dispose() {
     positionStream.cancel();
     super.dispose();
   }
 
-
   BitmapDescriptor markerBitMap;
-  cargarMarker()async{
-     markerBitMap = await BitmapDescriptor.fromAssetImage(
-       ImageConfiguration(devicePixelRatio: 2.5)
-       ,'src/icons/carTop.png',
-      );
+  cargarMarker() async {
+    markerBitMap = await BitmapDescriptor.fromAssetImage(
+      ImageConfiguration(devicePixelRatio: 2.5),
+      'src/icons/carTop.png',
+    );
   }
 
-  getUbication()async{
+  getUbication() async {
     try {
       position = await apiUbication.determinePosition();
       print("===> $position");
       try {
         mapController.animateCamera(CameraUpdate.newCameraPosition(
-        CameraPosition(target: LatLng(position.latitude,position.longitude ), zoom: 16),
-        )); 
-      } catch (e) {
-      }
-      setState(() {});  
-    } catch (e) {
-    }
+          CameraPosition(
+              target: LatLng(position.latitude, position.longitude), zoom: 16),
+        ));
+      } catch (e) {}
+      setState(() {});
+    } catch (e) {}
   }
 
   CameraPosition positionMap = CameraPosition(
-    target: LatLng(-16.482557865279468, -68.1214064732194),
-    zoom: 16
-  );
+      target: LatLng(-16.482557865279468, -68.1214064732194), zoom: 16);
 
   // Completer<GoogleMapController> _controller = Completer();
 
@@ -216,8 +213,8 @@ class _MapSendLocationState extends State<MapSendLocation> {
       child: Scaffold(
         body: Container(
           color: Colors.grey[50],
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Stack(
+            // crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
                 child: GoogleMap(
@@ -236,23 +233,30 @@ class _MapSendLocationState extends State<MapSendLocation> {
                     // _controller.complete(controller);
                     mapController = controller;
                     rootBundle.loadString('assets/mapStyle.txt').then((string) {
-                      mapController.setMapStyle(string);  
+                      mapController.setMapStyle(string);
                     });
                   },
                 ),
               ),
-              Text("  == Datos transferidos           = $i ="),
-              if(position?.latitude!=null)Text("  == Latitude                = ${position.latitude} ="),
-              if(position?.longitude!=null)Text("  == Longitude              = ${position.longitude} ="),
-              // if(position?.floor!=null)Text("  == floor                      = ${position.floor} ="),
-              if(position?.accuracy!=null)Text("  == accuracy                = ${position.accuracy} ="),
-              if(position?.altitude!=null)Text("  == Altitude                   = ${position.altitude} ="),
-              if(position?.heading!=null)Text("  == heading                   = ${position.heading} ="),
-              // if(position?.isMocked!=null)Text("  == isMocked                = ${position.isMocked} ="),
-              if(position?.speed!=null)Text("  == Velocidad               = ${position.speed} "),
-              if(position?.speedAccuracy!=null)Text("  == Aceleracion            = ${position.speedAccuracy} ="),
-              if(position?.time!=null)Text("  == time              = ${position.time} ="),
-
+              Positioned(
+                  bottom: 0,
+                  child: Container(
+                    // margin: EdgeInsets.symmetric(horizontal: 20),
+                    color: Colors.red,
+                    width: double.infinity,
+                    height: 200,
+                  ))
+              // Text("  == Datos transferidos           = $i ="),
+              // if(position?.latitude!=null)Text("  == Latitude                = ${position.latitude} ="),
+              // if(position?.longitude!=null)Text("  == Longitude              = ${position.longitude} ="),
+              // // if(position?.floor!=null)Text("  == floor                      = ${position.floor} ="),
+              // if(position?.accuracy!=null)Text("  == accuracy                = ${position.accuracy} ="),
+              // if(position?.altitude!=null)Text("  == Altitude                   = ${position.altitude} ="),
+              // if(position?.heading!=null)Text("  == heading                   = ${position.heading} ="),
+              // // if(position?.isMocked!=null)Text("  == isMocked                = ${position.isMocked} ="),
+              // if(position?.speed!=null)Text("  == Velocidad               = ${position.speed} "),
+              // if(position?.speedAccuracy!=null)Text("  == Aceleracion            = ${position.speedAccuracy} ="),
+              // if(position?.time!=null)Text("  == time              = ${position.time} ="),
             ],
           ),
         ),
@@ -263,5 +267,4 @@ class _MapSendLocationState extends State<MapSendLocation> {
   //////////////////////////////////////////////
   ///
   Set<Marker> _markers = {};
-  
 }

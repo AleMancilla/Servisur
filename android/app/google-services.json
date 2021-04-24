@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "525371663874-m833ngdqfb790timdi1jblc2aok81uf3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.taxis_app",
+            "certificate_hash": "7b04bd6dfe7e37beb8862e8c954fee540dc7a63e"
+          }
+        },
+        {
           "client_id": "525371663874-vi4nggchgt8928inv9frc1uhjolddthf.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -73,6 +81,59 @@
           "android_info": {
             "package_name": "com.example.taxis_app_admin",
             "certificate_hash": "eda68368f1a702b548a88b7f6e487cf63ddc34fd"
+          }
+        },
+        {
+          "client_id": "525371663874-udr5iptp5tq50po2rmat3md802oob6hi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.taxis_app_admin",
+            "certificate_hash": "7b04bd6dfe7e37beb8862e8c954fee540dc7a63e"
+          }
+        },
+        {
+          "client_id": "525371663874-rtikkasekr4lf8j6m5dgsvnju9adl9tp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWV3OuFr4LRHZDUxo-OdwnQdGuqzZOZ3w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "525371663874-rtikkasekr4lf8j6m5dgsvnju9adl9tp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:525371663874:android:74cae242aa1e838f5e691b",
+        "android_client_info": {
+          "package_name": "com.taxiservice.servisurusers"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "525371663874-kdi4nipecfe8nc4uva3qqfkcj0cd9qk7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.taxiservice.servisurusers",
+            "certificate_hash": "e410abb3714928e4ce3b26a901be6a8e296ff7a4"
+          }
+        },
+        {
+          "client_id": "525371663874-m0co385lohn6819q9gs7qgsno5do9jgd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.taxiservice.servisurusers",
+            "certificate_hash": "7b04bd6dfe7e37beb8862e8c954fee540dc7a63e"
           }
         },
         {

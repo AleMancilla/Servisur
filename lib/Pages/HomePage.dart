@@ -1,6 +1,7 @@
 import 'package:background_geolocation_plugin/background_geolocation_plugin.dart';
 import 'package:background_geolocation_plugin/location_item.dart';
 import 'package:background_geolocation_plugin/measure_state.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,6 +15,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final UserPreferences prefs = UserPreferences();
+  CollectionReference taxis = FirebaseFirestore.instance.collection('taxis');
 
   String _platformVersion = 'Unknown';
   String resultMsg = 'Unknown';
@@ -112,7 +114,7 @@ class _HomePageState extends State<HomePage> {
               height: 15,
             ),
             Text(
-              'Matricula: ${prefs.userMatricula}',
+              'Codigo: ${prefs.userMatricula}',
               style: TextStyle(
                   fontSize: 18,
                   color: Colors.blueGrey,
@@ -127,6 +129,8 @@ class _HomePageState extends State<HomePage> {
                 color: Colors.green,
                 onPressed: () async {
                   // MapSendLocation
+
+                  taxis.doc("${prefs.userMatricula}").update({'inJob': true});
                   Navigator.push(
                       context,
                       MaterialPageRoute(

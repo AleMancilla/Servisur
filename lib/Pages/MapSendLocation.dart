@@ -37,6 +37,7 @@ class _MapSendLocationState extends State<MapSendLocation> {
   @override
   void initState() {
     super.initState();
+    getstatustaxi();
     getUbication();
     cargarMarker();
 
@@ -71,74 +72,9 @@ class _MapSendLocationState extends State<MapSendLocation> {
         cambiarMarker();
       }
     });
-
-    // positionStream = Geolocator.getPositionStream(
-    //   desiredAccuracy: LocationAccuracy.best,
-    //   distanceFilter: 2,
-    //   // intervalDuration: Duration(seconds: 1),
-    //   // forceAndroidLocationManager: true
-    //   // timeInterval: 1
-    // ).listen(
-    //   (LocationData position) {
-    //       _markers = {};
-    //       this.position = position;
-    //       i = i+1;
-    //       print(position == null ? 'Unknown' :
-    //         position.latitude.toString() + ', ' +
-    //         position.longitude.toString() + ' __ ' +
-    //         position.floor.toString()  + ' __ ' +
-    //         position.accuracy.toString()  + ' __ ' +
-    //         position.altitude.toString()  + ' __ ' +
-    //         position.heading.toString()  + ' __ ' +
-    //         position.isMocked .toString()  + ' __ ' +
-    //         position.speed.toString()  + ' __ ' +
-    //         position.speedAccuracy.toString()  + ' __ ' +
-    //         position.timestamp.toString()
-    //       );
-    //       if(position != null){
-    //         setState(() {
-    //           _markers.add(
-    //           Marker(
-    //             markerId: MarkerId("MIMARCADOR"),
-    //             position: LatLng(position.latitude,position.longitude ),
-    //             icon: markerBitMap,
-    //             )
-    //           );
-    //           try {
-    //             // mapController.animateCamera(CameraUpdate.newCameraPosition(
-    //             // CameraPosition(target: LatLng(position.latitude,position.longitude ), zoom: 16),
-    //             // ));
-    //             taxis
-    //             .doc("${prefs.userMatricula}")
-    //             .set({
-    //               'matricula':prefs.userMatricula,
-    //               'idFirebase':prefs.userFirebaseId,
-    //               'userEmail':prefs.userEmail,
-    //               'userPhoto':prefs.userPhotoUrl,
-    //               'userName':prefs.userName,
-    //               'latitude':position.latitude.toString(),
-    //               'longitude':position.longitude.toString(),
-    //               'floor':position.floor.toString(),
-    //               'accuracy':position.accuracy.toString(),
-    //               'altitude':position.altitude.toString(),
-    //               'heading':position.heading.toString(),
-    //               'isMocked':position.isMocked .toString(),
-    //               'speed':position.speed.toString(),
-    //               'speedAccuracy':position.speedAccuracy.toString(),
-    //               'timestamp':position.timestamp.toString(),
-    //             })
-    //             .then((value) => print("taxi Updated"))
-    //             .catchError((error) => print("Failed to update taxi: $error"));
-    //           } catch (e) {
-    //             print("############ $e #############");
-    //           }
-    //         });
-
-    //       }
-    //   });
   }
 
-  cambiarMarker({String status = 'LIBRE'}) {
+  cambiarMarker({String status}) {
     try {
       setState(() {
         _markers.add(Marker(
@@ -158,12 +94,12 @@ class _MapSendLocationState extends State<MapSendLocation> {
       // ));
       taxis
           .doc("${prefs.userMatricula}")
-          .set({
-            'matricula': prefs.userMatricula,
-            'idFirebase': prefs.userFirebaseId,
-            'userEmail': prefs.userEmail,
-            'userPhoto': prefs.userPhotoUrl,
-            'userName': prefs.userName,
+          .update({
+            // 'matricula': prefs.userMatricula,
+            // 'idFirebase': prefs.userFirebaseId,
+            // 'userEmail': prefs.userEmail,
+            // 'userPhoto': prefs.userPhotoUrl,
+            // 'userName': prefs.userName,
             'latitude': position.latitude.toString(),
             'longitude': position.longitude.toString(),
             // 'floor':position.floor.toString(),
@@ -174,7 +110,7 @@ class _MapSendLocationState extends State<MapSendLocation> {
             'speed': position.speed.toString(),
             'speedAccuracy': position.speedAccuracy.toString(),
             'time': position.time.toString(),
-            'status': status
+            if (status != null) 'status': status
           })
           .then((value) => print("taxi Updated"))
           .catchError((error) => print("Failed to update taxi: $error"));
@@ -192,6 +128,37 @@ class _MapSendLocationState extends State<MapSendLocation> {
     super.dispose();
   }
 
+  getstatustaxi() {
+    FirebaseFirestore.instance
+        .collection('taxis')
+        .doc(prefs.userMatricula)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) async {
+      if (documentSnapshot.exists) {
+        if (documentSnapshot.data()['status'] != null) {
+          if (documentSnapshot.data()['status'] == 'LIBRE') {
+            markerBitMap = await BitmapDescriptor.fromAssetImage(
+              ImageConfiguration(devicePixelRatio: 2.5),
+              'src/icons/carTopGreen.png',
+            );
+          }
+          if (documentSnapshot.data()['status'] == 'EN CAMINO') {
+            markerBitMap = await BitmapDescriptor.fromAssetImage(
+              ImageConfiguration(devicePixelRatio: 2.5),
+              'src/icons/carTopYellow.png',
+            );
+          }
+          if (documentSnapshot.data()['status'] == 'ABORDO') {
+            markerBitMap = await BitmapDescriptor.fromAssetImage(
+              ImageConfiguration(devicePixelRatio: 2.5),
+              'src/icons/carTopRed.png',
+            );
+          }
+        }
+      }
+    });
+  }
+
   BitmapDescriptor markerBitMap;
   cargarMarker() async {
     markerBitMap = await BitmapDescriptor.fromAssetImage(
@@ -201,13 +168,14 @@ class _MapSendLocationState extends State<MapSendLocation> {
   }
 
   getUbication() async {
+    print('ENTRO');
     try {
       position = await apiUbication.determinePosition();
       print("===> $position");
       try {
         mapController.animateCamera(CameraUpdate.newCameraPosition(
           CameraPosition(
-              target: LatLng(position.latitude, position.longitude), zoom: 16),
+              target: LatLng(position.latitude, position.longitude), zoom: 15),
         ));
       } catch (e) {}
       setState(() {});
@@ -215,7 +183,7 @@ class _MapSendLocationState extends State<MapSendLocation> {
   }
 
   CameraPosition positionMap = CameraPosition(
-      target: LatLng(-16.482557865279468, -68.1214064732194), zoom: 16);
+      target: LatLng(-16.482557865279468, -68.1214064732194), zoom: 15);
 
   // Completer<GoogleMapController> _controller = Completer();
 
@@ -351,6 +319,10 @@ class _MapSendLocationState extends State<MapSendLocation> {
                       color: Colors.green.withOpacity(0.8),
                       onPressed: () async {
                         // MapSendLocation
+                        positionStream.cancel();
+                        taxis
+                            .doc("${prefs.userMatricula}")
+                            .update({'inJob': false});
                         Navigator.pop(context);
                         await BackgroundGeolocationPlugin
                             .stopLocationTracking();

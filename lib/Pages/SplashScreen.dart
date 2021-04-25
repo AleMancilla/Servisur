@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart';
 import 'package:taxis_app/Core/ApiUbication.dart';
 import 'package:taxis_app/Pages/HomePage.dart';
@@ -17,9 +18,10 @@ class _SplashScreenPageState extends State<SplashScreenPage> {
   final FirebaseAuth auth = FirebaseAuth.instance;
 
   LocationData position;
+  Position positionGeo;
   ApiUbication apiUbication = ApiUbication();
   getUbication() async {
-    position = await apiUbication.determinePosition();
+    positionGeo = await apiUbication.determinePositionGeolocator();
   }
 
   @override

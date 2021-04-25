@@ -32,7 +32,7 @@ dependencies:
   custom_splash: ^0.0.2
   google_sign_in: "^4.5.1"
   another_flushbar: ^1.10.17
-  # geolocator: ^6.1.4
+  geolocator: ^6.1.4
   location: ^3.0.0
   google_maps_flutter: ^2.0.2
   flutter_animarker: ^1.0.0

@@ -95,8 +95,8 @@ class _HomePageState extends State<HomePage> {
               borderRadius: BorderRadius.circular(100),
               child: Image.network(
                 prefs.userPhotoUrl,
-                width: 150,
-                height: 150,
+                width: 200,
+                height: 200,
                 fit: BoxFit.cover,
               ),
             ),
@@ -110,8 +110,15 @@ class _HomePageState extends State<HomePage> {
                   color: Colors.blueGrey,
                   fontWeight: FontWeight.w500),
             ),
-            SizedBox(
-              height: 15,
+            // SizedBox(
+            //   height: 15,
+            // ),
+            Text(
+              'Numero: ${prefs.userPhone}',
+              style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.blueGrey,
+                  fontWeight: FontWeight.w500),
             ),
             Text(
               'Codigo: ${prefs.userMatricula}',

@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "525371663874-idoaesbk44i1s9dfg7ad870a8dh8r2ak.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.taxis_app",
+            "certificate_hash": "e410abb3714928e4ce3b26a901be6a8e296ff7a4"
+          }
+        },
+        {
           "client_id": "525371663874-m833ngdqfb790timdi1jblc2aok81uf3.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -67,6 +75,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "525371663874-6v75c9r4c6s6p9djmllqf7grhfb382s9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.taxis_app_admin",
+            "certificate_hash": "e410abb3714928e4ce3b26a901be6a8e296ff7a4"
+          }
+        },
         {
           "client_id": "525371663874-9vf2b1uvf53c7tqokocr73e9k5hqo24f.apps.googleusercontent.com",
           "client_type": 1,
